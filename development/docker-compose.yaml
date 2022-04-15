@@ -35,3 +35,12 @@ services:
       MYSQL_PASSWORD : "backend"
     volumes:
       - ../volume/mysql:/var/lib/mysql
+  phpMyAdmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mysql
+      - PMA_USER=backend
+      - PMA_PASSWORD=backend
