@@ -10,7 +10,7 @@ ps:
 	docker-compose $(FILE) ps
 
 db:
-	docker-compose $(FILE) exec mysql mysql -u backend -pbackend
+	docker-compose $(FILE) exec mysql mysql -u backend -pbackend app
 
 app:
 	docker-compose $(FILE) exec backend bash
