@@ -6,6 +6,9 @@ up:
 down:
 	docker-compose $(FILE) down
 
+ps:
+	docker-compose $(FILE) ps
+
 db:
 	docker-compose $(FILE) exec mysql mysql -u backend -pbackend
 
