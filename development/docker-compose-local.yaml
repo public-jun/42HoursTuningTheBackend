@@ -1,0 +1,47 @@
+version: "3.7"
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile_local
+    ports:
+      - target: 80
+        published: 8080
+        protocol: tcp
+  backend:
+    init: true
+    build:
+      context: ./backend
+      dockerfile: Dockerfile_local
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend/src:/backend/src
+    working_dir: /backend/src
+    tty: true
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: "app"
+      MYSQL_USER: "backend"
+      MYSQL_PASSWORD : "backend"
+    volumes:
+      - ./mysql/sql_local:/docker-entrypoint-initdb.d
+  phpMyAdmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    ports:
+      - 8081:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mysql
+      - PMA_USER=backend
+      - PMA_PASSWORD=backend
