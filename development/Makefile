@@ -1,14 +1,16 @@
+FILE = -f docker-compose-local.yaml
+
 up:
-	docker-compose -f docker-compose-local.yml up -d --build
+	docker-compose $(FILE) up -d --build
 
 down:
-	docker-compose -f docker-compose-local.yml down
+	docker-compose $(FILE) down
 
 db:
-	docker-compose -f docker-compose-local.yml exec mysql mysql -u backend -pbackend
+	docker-compose $(FILE) exec mysql mysql -u backend -pbackend
 
 app:
-	docker-compose -f docker-compose-local.yml exec backend bash
+	docker-compose $(FILE) exec backend bash
 
 clean:
 	docker rm -f `docker ps -aq` | echo a
