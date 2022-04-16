@@ -20,6 +20,7 @@ const mysqlOption = {
 const pool = mysql.createPool(mysqlOption);
 
 const mylog = (obj) => {
+  return;
   if (Array.isArray(obj)) {
     for (const e of obj) {
       console.log(e);
