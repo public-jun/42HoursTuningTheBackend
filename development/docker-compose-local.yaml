@@ -12,9 +12,6 @@ services:
       - target: 80
         published: 8080
         protocol: tcp
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/access.log:/var/log/nginx/ftaccess.log
   backend:
     init: true
     build:
