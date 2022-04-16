@@ -908,9 +908,9 @@ const getCategories = async (req, res) => {
 
   const [rows] = await pool.query(`select * from category`);
 
-  for (const row of rows) {
-    mylog(row);
-  }
+  // for (const row of rows) {
+  //   mylog(row);
+  // }
 
   const items = {};
 
