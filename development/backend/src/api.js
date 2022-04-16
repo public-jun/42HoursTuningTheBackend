@@ -422,7 +422,7 @@ const allActive = async (req, res) => {
   limit ? offset ?; `;
 
   const [recordResult] = await pool.query(searchRecordQs, [limit, offset]);
-  mylog(recordResult);
+  // mylog(recordResult)
 
   const items = Array(recordResult.length);
   let count = 0;
@@ -559,18 +559,20 @@ const allClosed = async (req, res) => {
     record.created_by        as created_by,
     user.name                as created_by_name,
     record.created_at        as created_at,
-    record_item_file.item_id as item_id
+    record_item_file.item_id as thumb_nail_item_id
   from record
-  join user
+  left join user
     on record.created_by = user.user_id
-  join group_info
+  left join group_info
     on record.application_group = group_info.group_id
-  join record_item_file
+  left join record_item_file
     on record.record_id = record_item_file.linked_record_id
   where
     status = "closed" 
   order by updated_at desc, record_id asc 
   limit ? offset ?; `;
+
+  const [recordResult] = await pool.query(searchRecordQs, [limit, offset]);
 
   const items = Array(recordResult.length);
   let count = 0;
@@ -625,7 +627,7 @@ const allClosed = async (req, res) => {
     // if (itemResult.length === 1) {
     //   thumbNailItemId = itemResult[0].item_id;
     // }
-    thumbNailItemId = recordResult[i].item_id;
+    thumbNailItemId = recordResult[i].thumb_nail_item_id;
 
     const [countResult] = await pool.query(countQs, [recordId]);
     if (countResult.length === 1) {
@@ -814,6 +816,19 @@ const getComments = async (req, res) => {
   }
 
   const recordId = req.params.recordId;
+
+  // select
+  //   record_comment.comment_id as comment_id,
+  //   record_comment.value      as value,
+  //   record_comment.created_by as created_by,
+  //   record_comment.created_at as created_at,
+  //   user.name                 as created_by_name,
+  //   group_info.name           as created_by_primary_group_name
+  // from record_comment
+  // join 
+  // …
+  // where linked_record_id = 11 
+  // order by created_at desc;
 
   const commentQs = `select * from record_comment where linked_record_id = ? order by created_at desc`;
 
