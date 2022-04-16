@@ -182,9 +182,9 @@ const getRecord = async (req, res) => {
     files: [],
   };
 
-  const searchPrimaryGroupQs = `select * from group_member where user_id = ? and is_primary = true`;
+  // const searchPrimaryGroupQs = `select * from group_member where user_id = ? and is_primary = true`;
   // const searchUserQs = `select * from user where user_id = ? limit 1`;
-  const searchGroupQs = `select * from group_info where group_id = ? limit 1`;
+  // const searchGroupQs = `select * from group_info where group_id = ? limit 1`;
   // const searchCategoryQs = `select * from category where category_id = ? limit 1`;
 
   const line = recordResult[0];
@@ -232,7 +232,7 @@ const getRecord = async (req, res) => {
   mylog('itemResult');
   mylog(itemResult);
 
-  const searchFileQs = `select * from file where file_id = ? limit 1`;
+  const searchFileQs = `select * from file where file_id = '?' limit 1`;
   for (let i = 0; i < itemResult.length; i++) {
     const item = itemResult[i];
     const [fileResult] = await pool.query(searchFileQs, [item.linked_file_id]);
