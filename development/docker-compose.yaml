@@ -39,6 +39,8 @@ services:
       MYSQL_PASSWORD : "backend"
     volumes:
       - ../volume/mysql:/var/lib/mysql
+      - ./mysql/log:/ft
+      - ./mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     depends_on:
