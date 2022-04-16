@@ -117,7 +117,7 @@ const getRecord = async (req, res) => {
 
   const recordId = req.params.recordId;
 
-  const recordQs = `select * from record where record_id = ?`;
+  const recordQs = `select * from record where record_id = ? limit 1`;
 
   const [recordResult] = await pool.query(recordQs, [`${recordId}`]);
   mylog(recordResult);
@@ -731,7 +731,7 @@ const updateRecord = async (req, res) => {
   const recordId = req.params.recordId;
   const status = req.body.status;
 
-  await pool.query(`update record set status = ? where record_id = ?`, [
+  await pool.query(`update record set status = ? where record_id = ? limit 1`, [
     `${status}`,
     `${recordId}`,
   ]);
