@@ -144,9 +144,9 @@ const getRecord = async (req, res) => {
   };
 
   const searchPrimaryGroupQs = `select * from group_member where user_id = ? and is_primary = true`;
-  const searchUserQs = `select * from user where user_id = ?`;
-  const searchGroupQs = `select * from group_info where group_id = ?`;
-  const searchCategoryQs = `select * from category where category_id = ?`;
+  const searchUserQs = `select * from user where user_id = ? limit 1`;
+  const searchGroupQs = `select * from group_info where group_id = ? limit 1`;
+  const searchCategoryQs = `select * from category where category_id = ? limit 1`;
 
   const line = recordResult[0];
 
@@ -189,7 +189,7 @@ const getRecord = async (req, res) => {
   mylog('itemResult');
   mylog(itemResult);
 
-  const searchFileQs = `select * from file where file_id = ?`;
+  const searchFileQs = `select * from file where file_id = ? limit 1`;
   for (let i = 0; i < itemResult.length; i++) {
     const item = itemResult[i];
     const [fileResult] = await pool.query(searchFileQs, [item.linked_file_id]);
@@ -519,7 +519,7 @@ const allClosed = async (req, res) => {
   const searchThumbQs =
     'select * from record_item_file where linked_record_id = ? order by item_id asc limit 1';
   const countQs = 'select count(*) from record_comment where linked_record_id = ?';
-  const searchLastQs = 'select * from record_last_access where user_id = ? and record_id = ?';
+  const searchLastQs = 'select * from record_last_access where user_id = ? and record_id = ? limit 1';
 
   for (let i = 0; i < recordResult.length; i++) {
     const resObj = {
