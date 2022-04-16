@@ -202,7 +202,7 @@ const getRecord = async (req, res) => {
     recordInfo.files.push({ itemId: item.item_id, name: fileName });
   }
 
-  await pool.query(
+  pool.query(
     `
 	INSERT INTO record_last_access
 	(record_id, user_id, access_time)
