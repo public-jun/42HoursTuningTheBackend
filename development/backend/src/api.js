@@ -156,7 +156,7 @@ const getRecord = async (req, res) => {
     on primary_group_info.group_id = primary_group.group_id
 
   where
-    record_id = ?
+    record_id = '?'
   limit 1;
   `;
   const [recordResult] = await pool.query(recordQs, [`${recordId}`]);
@@ -232,7 +232,7 @@ const getRecord = async (req, res) => {
   mylog('itemResult');
   mylog(itemResult);
 
-  const searchFileQs = `select * from file where file_id = ? limit 1`;
+  const searchFileQs = `select * from file where file_id = '?' limit 1`;
   for (let i = 0; i < itemResult.length; i++) {
     const item = itemResult[i];
     const [fileResult] = await pool.query(searchFileQs, [item.linked_file_id]);
