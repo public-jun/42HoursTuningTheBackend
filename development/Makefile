@@ -1,6 +1,9 @@
 FILE = -f docker-compose-local.yaml
 
 up:
+	docker-compose $(FILE) up -d
+
+upb:
 	docker-compose $(FILE) up -d --build
 
 down:
