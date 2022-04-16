@@ -481,12 +481,12 @@ const allActive = async (req, res) => {
     items[i] = resObj;
   }
 
-  const recordCountQs = 'select count(*) from record where status = "open"';
+  // const recordCountQs = 'select count(*) from record where status = "open"';
 
-  const [recordCountResult] = await pool.query(recordCountQs);
-  if (recordCountResult.length === 1) {
-    count = recordCountResult[0]['count(*)'];
-  }
+  // const [recordCountResult] = await pool.query(recordCountQs);
+  // if (recordCountResult.length === 1) {
+  //   count = recordCountResult[0]['count(*)'];
+  // }
 
   res.send({ count: count, items: items });
 };
@@ -596,12 +596,12 @@ const allClosed = async (req, res) => {
     items[i] = resObj;
   }
 
-  const recordCountQs = 'select count(*) from record where status = "closed"';
+  // const recordCountQs = 'select count(*) from record where status = "closed"';
 
-  const [recordCountResult] = await pool.query(recordCountQs);
-  if (recordCountResult.length === 1) {
-    count = recordCountResult[0]['count(*)'];
-  }
+  // const [recordCountResult] = await pool.query(recordCountQs);
+  // if (recordCountResult.length === 1) {
+  //   count = recordCountResult[0]['count(*)'];
+  // }
 
   res.send({ count: count, items: items });
 };
