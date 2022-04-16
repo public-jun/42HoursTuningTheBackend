@@ -873,7 +873,7 @@ const getComments = async (req, res) => {
   // where linked_record_id = 11 
   // order by created_at desc;
 
-  const commentQs = `select * from record_comment where linked_record_id = ? order by created_at desc`;
+  const commentQs = `select * from record_comment where linked_record_id = '?' order by created_at desc`;
 
   const [commentResult] = await pool.query(commentQs, [`${recordId}`]);
   mylog(commentResult);
