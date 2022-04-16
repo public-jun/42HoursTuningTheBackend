@@ -15,4 +15,5 @@ create index idx42 on record(status);
 create index idx43 on record(category_id, application_group);
 
 -- group_member
-create index idx1 on group_member(user_id, is_primary);
+create index idx1 on group_member(user_id);
+create index idx2 on group_member(user_id, is_primary);
