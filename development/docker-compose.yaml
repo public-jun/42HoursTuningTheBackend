@@ -42,7 +42,9 @@ services:
       - ./mysql/log:/ft
       - ./mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    build:
+      context: ./phpmyadmin
+      dockerfile: Dockerfile
     depends_on:
       - mysql
     environment:
