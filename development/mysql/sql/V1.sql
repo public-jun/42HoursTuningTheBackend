@@ -10,5 +10,5 @@ create index idx1 on record_item_file(linked_record_id, created_at ASC);
 
 -- record
 create index idx1 on record(status, updated_at desc, record_id asc);
-create index idx42 on record(status);
-create index idx43 on record(category_id, application_group);
+-- create index idx42 on record(status);
+-- create index idx43 on record(category_id, application_group);
