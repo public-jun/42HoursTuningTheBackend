@@ -117,10 +117,40 @@ const getRecord = async (req, res) => {
 
   const recordId = req.params.recordId;
 
-  const recordQs = `select * from record where record_id = ? limit 1`;
+  // const recordQs = `select * from record where record_id = ? limit 1`;
 
+  // const [recordResult] = await pool.query(recordQs, [`${recordId}`]);
+  // mylog(recordResult);
+
+  const recordQs = `
+  select
+    record.record_id         as record_id,
+    record.status            as status,
+    record.title             as title,
+    record.detail            as detail,
+    record.category_id       as category_id,
+    category.name            as category_name,
+    record.application_group as application_group,
+    group_info.name          as application_group_name,
+    record.created_by        as created_by,
+    user.name                as created_by_name,
+    record.created_at        as created_at
+  from record
+
+  join group_info
+    on record.application_group = group_info.group_id
+
+  join user
+    on record.created_by = user.user_id
+    
+  join category
+    on record.category_id = category.category_id
+
+  where
+    record_id = ?
+  limit 1;
+  `;
   const [recordResult] = await pool.query(recordQs, [`${recordId}`]);
-  mylog(recordResult);
 
   if (recordResult.length !== 1) {
     res.status(404).send({});
@@ -144,9 +174,9 @@ const getRecord = async (req, res) => {
   };
 
   const searchPrimaryGroupQs = `select * from group_member where user_id = ? and is_primary = true`;
-  const searchUserQs = `select * from user where user_id = ? limit 1`;
+  // const searchUserQs = `select * from user where user_id = ? limit 1`;
   const searchGroupQs = `select * from group_info where group_id = ? limit 1`;
-  const searchCategoryQs = `select * from category where category_id = ? limit 1`;
+  // const searchCategoryQs = `select * from category where category_id = ? limit 1`;
 
   const line = recordResult[0];
 
@@ -160,20 +190,23 @@ const getRecord = async (req, res) => {
     }
   }
 
-  const [appGroupResult] = await pool.query(searchGroupQs, [line.application_group]);
-  if (appGroupResult.length === 1) {
-    recordInfo.applicationGroupName = appGroupResult[0].name;
-  }
+  // const [appGroupResult] = await pool.query(searchGroupQs, [line.application_group]);
+  // if (appGroupResult.length === 1) {
+  //   recordInfo.applicationGroupName = appGroupResult[0].name;
+  // }
+  recordInfo.applicationGroupName = recordResult[0].application_group_name;
 
-  const [userResult] = await pool.query(searchUserQs, [line.created_by]);
-  if (userResult.length === 1) {
-    recordInfo.createdByName = userResult[0].name;
-  }
+  // const [userResult] = await pool.query(searchUserQs, [line.created_by]);
+  // if (userResult.length === 1) {
+  //   recordInfo.createdByName = userResult[0].name;
+  // }
+  recordInfo.createdByName = recordResult[0].created_by_name;
 
-  const [categoryResult] = await pool.query(searchCategoryQs, [line.category_id]);
-  if (categoryResult.length === 1) {
-    recordInfo.categoryName = categoryResult[0].name;
-  }
+  // const [categoryResult] = await pool.query(searchCategoryQs, [line.category_id]);
+  // if (categoryResult.length === 1) {
+  //   recordInfo.categoryName = categoryResult[0].name;
+  // }
+  recordInfo.categoryName = categoryResult[0].category_name;
 
   recordInfo.recordId = line.record_id;
   recordInfo.status = line.status;
