@@ -13,3 +13,5 @@ dist
 volume
 
 **/rnishimo
+
+./development/mysql/sql_local/data
