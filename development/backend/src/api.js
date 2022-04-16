@@ -202,7 +202,7 @@ const getRecord = async (req, res) => {
     recordInfo.files.push({ itemId: item.item_id, name: fileName });
   }
 
-  pool.query(
+  await pool.query(
     `
 	INSERT INTO record_last_access
 	(record_id, user_id, access_time)
@@ -214,6 +214,9 @@ const getRecord = async (req, res) => {
 
   res.send(recordInfo);
 };
+
+// ISUCON
+
 
 // GET /record-views/tomeActive
 // 自分宛一覧
