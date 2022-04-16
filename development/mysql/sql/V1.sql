@@ -13,6 +13,7 @@ create index idx1 on record(status, updated_at desc, record_id asc);
 create index idx2 on record(created_by, status, updated_at desc, record_id asc);
 create index idx3 on record(status);
 create index idx4 on record(category_id, application_group);
+create index idx5 on record(created_by, status);
 
 -- group_member
 create index idx1 on group_member(user_id);
