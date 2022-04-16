@@ -134,7 +134,9 @@ const getRecord = async (req, res) => {
     group_info.name          as application_group_name,
     record.created_by        as created_by,
     user.name                as created_by_name,
-    record.created_at        as created_at
+    record.created_at        as created_at,
+    primary_group.group_id   as primary_group_id,
+    primary_group_info.name  as created_by_primary_group_name
   from record
 
   join group_info
@@ -145,6 +147,13 @@ const getRecord = async (req, res) => {
     
   join category
     on record.category_id = category.category_id
+
+  join group_member as primary_group
+    on record.created_by = primary_group.user_id
+      and primary_group.is_primary = true
+
+  join group_info as primary_group_info
+    on primary_group_info.group_id = primary_group.group_id
 
   where
     record_id = ?
@@ -180,33 +189,34 @@ const getRecord = async (req, res) => {
 
   const line = recordResult[0];
 
-  const [primaryResult] = await pool.query(searchPrimaryGroupQs, [line.created_by]);
-  if (primaryResult.length === 1) {
-    const primaryGroupId = primaryResult[0].group_id;
+  // const [primaryResult] = await pool.query(searchPrimaryGroupQs, [line.created_by]);
+  // if (primaryResult.length === 1) {
+  //   const primaryGroupId = primaryResult[0].group_id;
 
-    const [groupResult] = await pool.query(searchGroupQs, [primaryGroupId]);
-    if (groupResult.length === 1) {
-      recordInfo.createdByPrimaryGroupName = groupResult[0].name;
-    }
-  }
+  //   const [groupResult] = await pool.query(searchGroupQs, [primaryGroupId]);
+  //   if (groupResult.length === 1) {
+  //     recordInfo.createdByPrimaryGroupName = groupResult[0].name;
+  //   }
+  // }
+  recordInfo.createdByPrimaryGroupName = line.created_by_primary_group_name;
 
   // const [appGroupResult] = await pool.query(searchGroupQs, [line.application_group]);
   // if (appGroupResult.length === 1) {
   //   recordInfo.applicationGroupName = appGroupResult[0].name;
   // }
-  recordInfo.applicationGroupName = recordResult[0].application_group_name;
+  recordInfo.applicationGroupName = line.application_group_name;
 
   // const [userResult] = await pool.query(searchUserQs, [line.created_by]);
   // if (userResult.length === 1) {
   //   recordInfo.createdByName = userResult[0].name;
   // }
-  recordInfo.createdByName = recordResult[0].created_by_name;
+  recordInfo.createdByName = line.created_by_name;
 
   // const [categoryResult] = await pool.query(searchCategoryQs, [line.category_id]);
   // if (categoryResult.length === 1) {
   //   recordInfo.categoryName = categoryResult[0].name;
   // }
-  recordInfo.categoryName = categoryResult[0].category_name;
+  recordInfo.categoryName = line.category_name;
 
   recordInfo.recordId = line.record_id;
   recordInfo.status = line.status;
