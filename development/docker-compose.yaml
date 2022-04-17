@@ -16,7 +16,7 @@ services:
     depends_on:
       - backend
       - frontend
-      - phpmyadmin
+      # - phpmyadmin
   backend:
     init: true
     build:
