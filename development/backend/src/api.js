@@ -754,26 +754,16 @@ const getComments = async (req, res) => {
 
   const recordId = req.params.recordId;
 
-  const commentQs = `select * from record_comment where linked_record_id = '?' order by created_at desc`;
+  const commentQs = `select * from record_comment where linked_record_id = ? order by created_at desc`;
 
   const [commentResult] = await pool.query(commentQs, [`${recordId}`]);
   mylog(commentResult);
 
   const commentList = Array(commentResult.length);
 
-  const createdBys = commentResult.map(ele => ele.created_by).join();
-
-  const searchPrimaryGroupQs = `select * from group_member where user_id in (${createdBys}) and is_primary = true`;
-  const searchPrimaryGroup = await pool.query(searchPrimaryGroupQs);
-
-  const userResultSQL = `select * from user where user_id in (${createdBys})`;
-  const userResult = await pool.query(userResultSQL);
-
-  const primaryGroupIds = searchPrimaryGroup.map(ele => ele.group_id).join();
-  const groupResultSQL = `select * from group_info where group_id in (${primaryGroupIds})`;
-  const [groupResult] = await pool.query(groupResultSQL);
-
-
+  const searchPrimaryGroupQs = `select * from group_member where user_id = ? and is_primary = true`;
+  const searchUserQs = `select * from user where user_id = ?`;
+  const searchGroupQs = `select * from group_info where group_id = ?`;
   for (let i = 0; i < commentResult.length; i++) {
     let commentInfo = {
       commentId: '',
@@ -785,22 +775,20 @@ const getComments = async (req, res) => {
     };
     const line = commentResult[i];
 
-    // const [primaryResult] = await pool.query(searchPrimaryGroupQs, [line.created_by]);
-    // if (primaryResult.length === 1) {
-    //   const primaryGroupId = primaryResult[0].group_id;
+    const [primaryResult] = await pool.query(searchPrimaryGroupQs, [line.created_by]);
+    if (primaryResult.length === 1) {
+      const primaryGroupId = primaryResult[0].group_id;
 
-    //   const [groupResult] = await pool.query(searchGroupQs, [primaryGroupId]);
-    //   if (groupResult.length === 1) {
-    //     commentInfo.createdByPrimaryGroupName = groupResult[0].name;
-    //   }
-    // }
-    commentInfo.createdByPrimaryGroupName = groupResult[i].name;
+      const [groupResult] = await pool.query(searchGroupQs, [primaryGroupId]);
+      if (groupResult.length === 1) {
+        commentInfo.createdByPrimaryGroupName = groupResult[0].name;
+      }
+    }
 
-    // const [userResult] = await pool.query(searchUserQs, [line.created_by]);
-    // if (userResult.length === 1) {
-    //   commentInfo.createdByName = userResult[0].name;
-    // }
-    commentInfo.createdByName = userResult[i].name;
+    const [userResult] = await pool.query(searchUserQs, [line.created_by]);
+    if (userResult.length === 1) {
+      commentInfo.createdByName = userResult[0].name;
+    }
 
     commentInfo.commentId = line.comment_id;
     commentInfo.value = line.value;
@@ -810,9 +798,9 @@ const getComments = async (req, res) => {
     commentList[i] = commentInfo;
   }
 
-  // for (const row of commentList) {
-  //   mylog(row);
-  // }
+  for (const row of commentList) {
+    mylog(row);
+  }
 
   res.send({ items: commentList });
 };
