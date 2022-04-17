@@ -39,16 +39,16 @@ services:
       MYSQL_PASSWORD : "backend"
     volumes:
       - ../volume/mysql:/var/lib/mysql
-      - ./mysql/log:/ft
       - ./mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf
-  phpmyadmin:
-    build:
-      context: ./phpmyadmin
-      dockerfile: Dockerfile
-    depends_on:
-      - mysql
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOSTS=mysql
-      - PMA_USER=backend
-      - PMA_PASSWORD=backend
+      # - ./mysql/log:/ft
+  # phpmyadmin:
+  #   build:
+  #     context: ./phpmyadmin
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - mysql
+  #   environment:
+  #     - PMA_ARBITRARY=1
+  #     - PMA_HOSTS=mysql
+  #     - PMA_USER=backend
+  #     - PMA_PASSWORD=backend
