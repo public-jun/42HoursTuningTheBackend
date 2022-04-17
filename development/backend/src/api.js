@@ -744,6 +744,9 @@ const updateRecord = async (req, res) => {
 
 // GET records/{recordId}/comments
 // コメントの取得
+const getCommentsTest = async (req, res) => {
+  res.send({items: []});
+}
 const getComments = async (req, res) => {
   let user = await getLinkedUser(req.headers);
 

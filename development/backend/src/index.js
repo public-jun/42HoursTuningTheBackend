@@ -75,7 +75,8 @@ app.put('/api/client/records/:recordId', async (req, res, next) => {
 
 app.get('/api/client/records/:recordId/comments', async (req, res, next) => {
   try {
-    await api.getComments(req, res);
+    await api.getCommentsTest(req, res);
+    // await api.getComments(req, res);
   } catch(e) {
     console.log(e);
     next(new Error("Unexpect"));
