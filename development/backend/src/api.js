@@ -764,10 +764,12 @@ const getComments = async (req, res) => {
   const createdBys = commentResult.map(ele => ele.created_by).join();
 
   const searchPrimaryGroupQs = `select * from group_member where user_id in (${createdBys}) and is_primary = true`;
-  const userResult = `select * from user where user_id in (${createdBys})`;
+  const userResultSQL = `select * from user where user_id in (${createdBys})`;
+  const userResult = await pool.query(userResultSQL);
 
   const primaryGroupIds = searchPrimaryGroupQs.map(ele => ele.group_id).join();
-  const groupResult = `select * from group_info where group_id in (${primaryGroupIds})`;
+  const groupResultSQL = `select * from group_info where group_id in (${primaryGroupIds})`;
+  const [groupResult] = await pool.query(groupResultSQL);
 
 
   for (let i = 0; i < commentResult.length; i++) {
